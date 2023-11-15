@@ -128,9 +128,16 @@ EOF
 
 ######## START OF CHANGES IN THE FRONTEND DIRECTORY #########
 cd ..
-npm create vite@latest -y "$PROJECT_NAME"-frontend
+npm create vite@latest -y "$PROJECT_NAME"-frontend -- --template react
+echo "react app created"
+echo "cd into $PROJECT_NAME-frontend"
 cd "$PROJECT_NAME"-frontend || echo "Error going into $PROJECT_NAME-frontend directory"
+echo "installing node packages..."
+sleep 1
 npm i || echo "Error node package installation"
+echo "Node packages installed"
+echo "No need to run cd $PROJECT_NAME-frontend and npm install"
+
 
 ######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
 
