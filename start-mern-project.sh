@@ -1,6 +1,18 @@
 #!/bin/bash
 echo "Starting MERN Project"
 
+echo "Make sure you are reading README.md before you continue (y or n)"
+read -r ANSWER
+
+if [ ! ${ANSWER,,} == "y" ]; then
+  if [ ! ${ANSWER,,} == "n" ]; then
+    echo 'Please enter "y" or "n"'
+    exit
+  fi
+  echo "open README.md before running this script"
+  exit
+fi
+
 echo "What should we name the project? (ex. no-spaces, No-Spaces)"
 
 read -r PROJECT_NAME
@@ -18,8 +30,6 @@ else
 EOF
   # Create README file
   touch README.md || echo "Error creating README.md file"
-  # Create directory for frontend
-  mkdir frontend || echo "Error creating frontend directory"
   # Create directory for backend
   mkdir backend || echo "Error creating backend directory"
   # Initialize git version control
@@ -113,8 +123,16 @@ EOF
 # Creating config.js file and writing initial code
   cp .env .env.example || echo "Error creating env.example file"
 
-  ######### END OF CHANGES IN THE BACKEND DIRECTORY #########
-  
+######### END OF CHANGES IN THE BACKEND DIRECTORY #########
+
+
+######## START OF CHANGES IN THE FRONTEND DIRECTORY #########
+cd ..
+npm create vite@latest -y "$PROJECT_NAME"-frontend
+cd "$PROJECT_NAME"-frontend || echo "Error going into $PROJECT_NAME-frontend directory"
+npm i || echo "Error node package installation"
+
+######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
 
   # Project Creation completed
   echo "$PROJECT_NAME project created, Happy coding!"
