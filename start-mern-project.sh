@@ -142,8 +142,7 @@ app.get("/", (request, response) => {
     .send("Welcome to your first API endpoint in nodejs");
 });
 
-// Add your endpoint codes here
-
+// Add middleware for api routes here
 
 mongoose
 .connect(mongoDBURL)
