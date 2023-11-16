@@ -96,9 +96,10 @@ cd backend || echo "Error cd to backend directory"
 npm init -y || echo "Error initializing nodejs"
 # create backend structure and installing necessary packages
 mkdir models || echo "Error creating models directory"
-# npm i express nodemon || echo "Error installing express and nodemon"
-# npm i mongoose || echo "Error installing mongoose"
-# npm i dotenv || echo "Error installing dotenv"
+mkdir routes || echo "Error creating routes directory"
+npm i express nodemon || echo "Error installing express and nodemon"
+npm i mongoose || echo "Error installing mongoose"
+npm i dotenv || echo "Error installing dotenv"
 # Updating package.json file
 cat <<-'EOF' > package.json
 {
@@ -190,7 +191,6 @@ echo "Backend files and directory created"
 # echo "Should we test run the back end? (y or n)"
 # read -r TEST_BACKEND
 # if [ "${TEST_BACKEND,,}" == "y" ]; then
-#  cd backend
 #   npm run dev
 # fi
 
@@ -213,7 +213,23 @@ echo "No need to run cd $PROJECT_NAME-frontend and npm install"
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
+cat <<-EOF > tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+EOF
 
+cd src || echo "Got into the src directory"
+cat <<-EOF > index.css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+EOF
 ######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
 
   # Project Creation completed
