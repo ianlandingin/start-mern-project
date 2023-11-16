@@ -15,3 +15,5 @@ ex: test-project
 Follow the prompts
 Step 3: Open project in vscode(Or IDE of your choice):
 $ code test-project
+
+This is a test update for branch protection
