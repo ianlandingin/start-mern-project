@@ -371,6 +371,10 @@ echo "Edited tailwind.config.js file's content types"
 
 cd src || echo "Got into the src directory"
 echo "cd src"
+mkdir pages
+echo "Created pages directory for frontend"
+mkdir components
+echo "Created components directory for frontend"
 cat <<-EOF > index.css
 @tailwind base;
 @tailwind components;
