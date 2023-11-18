@@ -2,6 +2,15 @@
 clear
 echo "Starting MERN Project"
 sleep 1
+clear
+echo "Starting MERN Project."
+sleep 1
+clear
+echo "Starting MERN Project.."
+sleep 1
+clear
+echo "Starting MERN Project..."
+clear
 
 next_line (){
   echo ""
@@ -11,13 +20,15 @@ next_line (){
 READ_ME_OPEN=1
 while [ $READ_ME_OPEN -le 1 ]
 do
-  read -rp "Make sure you are reading README.md before you continue (y or n): " -n 1 ANSWER
+  read -rp "Do you have README.md open before you continue? (y or n): " -n 1 ANSWER
   next_line
   if [[ ! "${ANSWER,,}" == "y" && ! "${ANSWER,,}" == "n"  ]]
   then
+    clear
     echo 'Please enter y or n (ctrl+c to exit)'
     next_line
   elif [ ! "${ANSWER,,}" == "y" ]; then
+    clear
     echo "open README.md before running this script"
     next_line
   else
@@ -40,9 +51,11 @@ do
   read -rn 1 MONGO_ANSWER
   next_line
   if [[ ! "${MONGO_ANSWER,,}" == "y" && ! "${MONGO_ANSWER,,}" == "n"  ]]; then
+  clear
   echo 'Please enter y or n (ctrl+c to exit)'
   next_line
   elif [ ! "${MONGO_ANSWER,,}" == "y" ]; then
+  clear
   echo "Pls create a mongodb database first and take note of the following then comeback:
   database_name:
   username:
@@ -70,7 +83,9 @@ do
   PROJECT_NAME="${PROJECT_NAME// }"
 
   if [ ! "${PROJECT_NAME,,}" ]; then
+  clear
   echo "Please put a project name"
+  next_line
   else
     echo "Project name: $PROJECT_NAME"
     ((PROJECT++))
@@ -167,35 +182,49 @@ press enter for default (5555): "
 done
 clear
 
+
+
 echo "Initializing $PROJECT_NAME project..."
 sleep 1
-clear
 
 # Create directory for new project
 mkdir "$PROJECT_NAME" || echo "Error creating new project directory"
+echo "$PROJECT_NAME directory created"
 cd "$PROJECT_NAME" || echo "Error cd to new project directory"
+echo "cd $PROJECT_NAME"
 # Create gitignore file for version control
 cat <<EOF > .gitignore
 ### ENV Files ###
 .env
 EOF
+echo "Created .gitignore file and added .env"
 # Create README file
 touch README.md || echo "Error creating README.md file"
+echo "Created read me file"
 # Create directory for backend
 mkdir backend || echo "Error creating backend directory"
+echo "Created backend directory"
 # Initialize git version control
 git init || echp "error initializing git"
+echo "Initialized git repo"
 # Initialize nodejs inside backend directory
 
 ######### START OF CHANGES IN THE BACKEND DIRECTORY #########
 cd backend || echo "Error cd to backend directory"
+echo "cd backend"
 npm init -y || echo "Error initializing nodejs"
+echo "Initialized nodejs"
 # create backend structure and installing necessary packages
 mkdir models || echo "Error creating models directory"
+echo "Created models directory"
 mkdir routes || echo "Error creating routes directory"
+echo "Created routes directory"
 npm i express nodemon || echo "Error installing express and nodemon"
+echo "Installed Express.js and nodemon packages"
 npm i mongoose || echo "Error installing mongoose"
+echo "Installed mongoose package"
 npm i dotenv || echo "Error installing dotenv"
+echo "Installed dotenv package"
 # Updating package.json file
 cat <<-'EOF' > package.json
 {
@@ -220,7 +249,8 @@ cat <<-'EOF' > package.json
 }
 
 EOF
-  # Creating index.js file and writing initial code
+echo "Edited package.json type and script"
+# Creating index.js file and writing initial code
 cat <<-'EOF' > index.js
 import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
@@ -257,6 +287,7 @@ mongoose
   });
 
 EOF
+echo "Created index.js file and wrote initial code"
 # Creating config.js file and writing initial code
 cat <<-'EOF' > config.js
 import dotenv from "dotenv";
@@ -268,6 +299,7 @@ export const PORT = process.env.PORT;
 export const mongoDBURL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}`;
 
 EOF
+echo "Created config.js file and wrote initial code"
 # Creating dotenv example file and writing initial code
 cat <<EOF > .env.example
 MONGO_DATABASE=
@@ -276,6 +308,7 @@ MONGO_PASSWORD=
 MONGO_CLUSTER=
 PORT=
 EOF
+echo "Created .env.example file and wrote initial code"
 # Creating dotenv file and writing initial code
 cat <<EOF > .env
 MONGO_DATABASE=$DATABASE_NAME
@@ -284,9 +317,11 @@ MONGO_PASSWORD=$PASSWORD
 MONGO_CLUSTER=$CLUSTER_NAME
 PORT=$PORT_NUMBER
 EOF
+echo "Created .env file and wrote initial code with MongoDB data"
 
 # Install CORS policy node package
 npm i cors || echo "Error installing CORS package"
+echo "Installed CORS package"
 
 
 echo "Backend files and directory created"
@@ -302,22 +337,25 @@ echo "Backend files and directory created"
 
 ######## START OF CHANGES IN THE FRONTEND DIRECTORY #########
 cd ..
+echo "Back to $PROJECT_NAME directory"
 npm create vite@latest -y "$PROJECT_NAME"-frontend -- --template react
-echo "react app created"
-echo "cd into $PROJECT_NAME-frontend"
+echo "Created $PROJECT_NAME-frontend directory"
+echo "React.js app created using vite"
 cd "$PROJECT_NAME"-frontend || echo "Error going into $PROJECT_NAME-frontend directory"
-echo "installing node packages..."
-sleep 1
+echo "cd $PROJECT_NAME-frontend"
 npm i || echo "Error node package installation"
-echo "Node packages installed"
+echo "installed Node packages "
 echo "No need to run cd $PROJECT_NAME-frontend and npm install"
 
 # Installing and initializing Tailwind CSS
 npm install -D tailwindcss postcss autoprefixer
+echo "Installed tailwind css"
 npx tailwindcss init -p
+echo "Initialized tailwind css"
 
 # SPA and react-router-dom
 npm i react-router-dom
+echo "Installed react-router-dom"
 
 cat <<-EOF > tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -329,15 +367,19 @@ export default {
   plugins: [],
 };
 EOF
+echo "Edited tailwind.config.js file's content types"
 
 cd src || echo "Got into the src directory"
+echo "cd src"
 cat <<-EOF > index.css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 EOF
+echo "Edited index.css"
 
 rm App.css
+echo "Deleted App.css file"
 
 cat <<-EOF > App.jsx
 import React from 'react'
@@ -351,7 +393,10 @@ const App = () => {
 export default App
 EOF
 
-######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
+echo "Edited App.jsx file to initailize new function component"
 
+sleep 3
+######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
+  clear
   # Project Creation completed
   echo "$PROJECT_NAME project created, Happy coding!"
