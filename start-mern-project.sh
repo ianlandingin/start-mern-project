@@ -1,79 +1,175 @@
 #!/bin/bash
+clear
 echo "Starting MERN Project"
+sleep 1
 
-echo "Make sure you are reading README.md before you continue (y or n)"
-read -r ANSWER
+next_line (){
+  echo ""
+}
 
-if [ ! "${ANSWER,,}" == "y" ]; then
-  if [ ! "${ANSWER,,}" == "n" ]; then
-  echo 'Please enter "y" or "n"'
-  exit
-  fi
-  echo "open README.md before running this script"
-  exit
 
+READ_ME_OPEN=1
+while [ $READ_ME_OPEN -le 1 ]
+do
+  read -rp "Make sure you are reading README.md before you continue (y or n): " -n 1 ANSWER
+  next_line
+  if [[ ! "${ANSWER,,}" == "y" && ! "${ANSWER,,}" == "n"  ]]
+  then
+    echo 'Please enter y or n (ctrl+c to exit)'
+    next_line
+  elif [ ! "${ANSWER,,}" == "y" ]; then
+    echo "open README.md before running this script"
+    next_line
+  else
+    ((READ_ME_OPEN++))
 fi
+done
 
 
-echo "Have you created a mongoDB cluster and taken note of the username, password, and Cluster URI? (y or n)"
-read -r MONGO_ANSWER
 
-if [ ! "${MONGO_ANSWER,,}" == "y" ]; then
-  if [ ! "${MONGO_ANSWER,,}" == "n" ]; then
-  echo 'Please enter "y" or "n"'
-  exit
-  fi
-  echo "Pls create a mongodb database first and take note of the following:
+clear
+MONGO_CREATED=1
+while [ $MONGO_CREATED -le 1 ]
+do
+  echo "Have you created a mongoDB database
+  and taken note of the ff? (y or n):
+  - Database name
+  - Username
+  - Password
+  - Cluster URI"
+  read -rn 1 MONGO_ANSWER
+  next_line
+  if [[ ! "${MONGO_ANSWER,,}" == "y" && ! "${MONGO_ANSWER,,}" == "n"  ]]; then
+  echo 'Please enter y or n (ctrl+c to exit)'
+  next_line
+  elif [ ! "${MONGO_ANSWER,,}" == "y" ]; then
+  echo "Pls create a mongodb database first and take note of the following then comeback:
   database_name:
   username:
   password:
   cluster: (don't know what cluster is? check README.md)
   
   You can follow this link if you don't know how:
-  https://www.mongodb.com/basics/create-database"
-  exit
+  https://www.mongodb.com/basics/create-database
+  
+  (ctrl+c to exit)"
+  next_line
+  else
+    ((MONGO_CREATED++))
 fi
+done
+clear
 
-echo "What should we name the project? (ex. no-spaces, No-Spaces)"
 
-read -r PROJECT_NAME
 
-if [ ! "${PROJECT_NAME,,}" ]; then
+PROJECT=1
+while [ $PROJECT -le 1 ]
+do
+  read -rp "What should we name the project? (ex. no-spaces, No-Spaces): " PROJECT_NAME
+  # Remove any whitespace
+  PROJECT_NAME="${PROJECT_NAME// }"
+
+  if [ ! "${PROJECT_NAME,,}" ]; then
   echo "Please put a project name"
-  exit
-fi
+  else
+    echo "Project name: $PROJECT_NAME"
+    ((PROJECT++))
+  fi
+done
 
-echo "Mongodb database name?"
-read -r DATABASE_NAME
-if [ ! "${DATABASE_NAME,,}" ]; then
-  echo "Please put a username"
-  exit
-fi
-echo "Mongodb username?"
-read -r USER_NAME
-if [ ! "${USER_NAME,,}" ]; then
-  echo "Please put a username"
-  exit
-fi
-echo "Mongodb password?"
-read -r PASSWORD
-if [ ! "${PASSWORD,,}" ]; then
-  echo "Please put a username"
-  exit
-fi
-echo "Cluster name?"
-read -r CLUSTER_NAME
-if [ ! "${CLUSTER_NAME,,}" ]; then
-  echo "Please put a username"
-  exit
-fi
-echo "What port number should the database run in dev? (ex.5555)
-press enter for default(5555)"
-read PORT_NUMBER
-if [ ! "${PORT_NUMBER,,}" ]; then
-  PORT_NUMBER=5555
-fi
+DATABASE=1
+while [ $DATABASE -le 1 ]
+do
+  read -rp "Database name?: " DATABASE_NAME
+  # Remove any whitespace
+  DATABASE_NAME="${DATABASE_NAME// }"
 
+  if [ ! "${DATABASE_NAME,,}" ]; then
+  echo "Please put your database name"
+  else
+    echo "Database name: $DATABASE_NAME"
+    ((DATABASE++))
+  fi
+done
+
+
+USER=1
+while [ $USER -le 1 ]
+do
+  read -rp "Username?: " USER_NAME
+  # Remove any whitespace
+  USER_NAME="${USER_NAME// }"
+
+  if [ ! "${USER_NAME,,}" ]; then
+  echo "Please put your username"
+  else
+    echo "Username name: $USER_NAME"
+    ((USER++))
+  fi
+done
+
+
+PASS=1
+while [ $PASS -le 1 ]
+do
+  read -rsp "Password?: " PASSWORD
+  # Remove any whitespace
+  PASSWORD="${PASSWORD// }"
+
+  if [ ! "${PASSWORD,,}" ]; then
+  echo "Please put your password"
+  else
+    next_line
+    ((PASS++))
+  fi
+done
+
+
+CLUSTER=1
+while [ $CLUSTER -le 1 ]
+do
+  read -rp "Cluster name?: " CLUSTER_NAME
+  # Remove any whitespace
+  CLUSTER_NAME="${CLUSTER_NAME// }"
+
+  if [ ! "${CLUSTER_NAME,,}" ]; then
+  echo "Please put your cluster's name"
+  else
+    echo "Cluster name: $CLUSTER_NAME"
+    ((CLUSTER++))
+  fi
+done
+
+PORT=1
+while [ $PORT -le 1 ]
+do
+  echo -n "What port number should the database run in dev? (ex. 5555)
+press enter for default (5555): "
+  read -rn 4 PORT_NUMBER
+  # Remove any whitespace
+  PORT_NUMBER="${PORT_NUMBER// }"
+  len=${#PORT_NUMBER}
+
+  if [ ! "${PORT_NUMBER,,}" ]
+  then
+    PORT_NUMBER=5555
+    echo "Port: $PORT_NUMBER"
+    ((PORT++))
+  elif [[ "$len" -le "3" ]]
+  then
+    echo "Too short. Port number should be 4 digits."
+    sleep 1
+  else
+    next_line
+    echo "Port: $PORT_NUMBER"
+    ((PORT++))
+  fi
+done
+clear
+
+echo "Initializing $PROJECT_NAME project..."
+sleep 1
+clear
 
 # Create directory for new project
 mkdir "$PROJECT_NAME" || echo "Error creating new project directory"
@@ -129,11 +225,14 @@ cat <<-'EOF' > index.js
 import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
+import cors from "cors";
 
 const app = express();
 
 // Middleware for parsing body
 app.use(express.json());
+
+// Middleware for handling CORS Policy
 
 app.get("/", (request, response) => {
   console.log(request);
@@ -142,20 +241,21 @@ app.get("/", (request, response) => {
     .send("Welcome to your first API endpoint in nodejs");
 });
 
-// Add middleware for api routes here
+// Add Middlewares for api routes
 
 
 mongoose
-.connect(mongoDBURL)
-.then(() => {
-  console.log("App is connected to database");
-  app.listen(PORT, () => {
-    console.log(`App is listening to port: ${PORT}`);
+  .connect(mongoDBURL)
+  .then(() => {
+    console.log("App is connected to database");
+    app.listen(PORT, () => {
+      console.log(`App is listening to port: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error.message);
   });
-})
-.catch((error) => {
-  console.log(error.message);
-});
+
 EOF
 # Creating config.js file and writing initial code
 cat <<-'EOF' > config.js
@@ -185,6 +285,9 @@ MONGO_CLUSTER=$CLUSTER_NAME
 PORT=$PORT_NUMBER
 EOF
 
+# Install CORS policy node package
+npm i cors || echo "Error installing CORS package"
+
 
 echo "Backend files and directory created"
 
@@ -213,6 +316,9 @@ echo "No need to run cd $PROJECT_NAME-frontend and npm install"
 npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init -p
 
+# SPA and react-router-dom
+npm i react-router-dom
+
 cat <<-EOF > tailwind.config.js
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -230,6 +336,21 @@ cat <<-EOF > index.css
 @tailwind components;
 @tailwind utilities;
 EOF
+
+rm App.css
+
+cat <<-EOF > App.jsx
+import React from 'react'
+
+const App = () => {
+  return (
+    <div>App</div>
+  )
+}
+
+export default App
+EOF
+
 ######### END OF CHANGES IN THE FRONTEND DIRECTORY #########
 
   # Project Creation completed
