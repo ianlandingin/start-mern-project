@@ -344,8 +344,9 @@ echo "React.js app created using vite"
 cd "$PROJECT_NAME"-frontend || echo "Error going into $PROJECT_NAME-frontend directory"
 echo "cd $PROJECT_NAME-frontend"
 npm i || echo "Error node package installation"
+
 echo "installed Node packages "
-echo "No need to run cd $PROJECT_NAME-frontend and npm install"
+ echo "No need to run cd $PROJECT_NAME-frontend and npm install"
 
 # Installing and initializing Tailwind CSS
 npm install -D tailwindcss postcss autoprefixer
